@@ -61,8 +61,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserProfile = async (userId: string) => {
-    const { data } = await supabase.from('users').select('*').eq('id', userId).single();
+  const fetchUserProfile = async (userId: string, retries = 3): Promise<void> => {
+    const { data, error } = await supabase.from('users').select('*').eq('id', userId).single();
+    if (error) {
+      console.warn('fetchUserProfile error:', error.message, '| userId:', userId, '| retries left:', retries - 1);
+      // Row might not exist yet if the trigger hasn't completed — retry
+      if (retries > 1) {
+        await new Promise(r => setTimeout(r, 1000));
+        return fetchUserProfile(userId, retries - 1);
+      }
+    }
     if (data) {
       setUser({
         ...data,
