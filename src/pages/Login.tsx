@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -12,12 +12,19 @@ import logoLight from '@/assets/navguard-compact-light.svg';
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { login, register } = useAuth();
+  const { user, loading, login, register } = useAuth();
   const { theme } = useTheme();
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+
+  // Once user profile loads, redirect to correct dashboard
+  useEffect(() => {
+    if (!loading && user) {
+      navigate(user.isAdmin ? '/authority' : '/dashboard', { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +35,7 @@ const Login = () => {
         setIsRegister(false);
       } else if (result === true) {
         toast.success('Account created!');
-        navigate('/dashboard');
+        // Redirect will happen via the useEffect above once user profile loads
       } else {
         toast.error('Registration failed. Email may already exist.');
       }
@@ -36,9 +43,7 @@ const Login = () => {
       const ok = await login(email, password);
       if (ok) {
         toast.success('Signed in successfully!');
-        // Navigation will be handled by auth state change — wait briefly then redirect
-        // The useAuth hook will set the user; we rely on Dashboard/AuthorityDashboard to handle role-based access
-        navigate('/dashboard');
+        // Redirect will happen via the useEffect above once user profile loads
       } else {
         toast.error('Invalid credentials');
       }
