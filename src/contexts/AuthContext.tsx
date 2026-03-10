@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (data) {
       setUser({
         ...data,
-        isAdmin: data.role === 'authority'
+        isAdmin: data.role?.trim() === 'authority'
       });
     } else {
       setUser(null);
