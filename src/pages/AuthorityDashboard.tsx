@@ -54,6 +54,15 @@ const AuthorityDashboard = () => {
     setRefreshKey(k => k + 1);
   };
 
+  // Show loading spinner while auth is initializing
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
+
   const activeAlerts = alerts.filter(a => !a.resolved);
   const verifiedCount = users.filter(u => u.idUploaded).length;
 

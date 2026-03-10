@@ -64,7 +64,18 @@ const Dashboard = () => {
     }
   };
 
-  const handleRequestLocation = () => checkLocation();
+  const handleRequestLocation = () => {
+    // Show loading spinner while auth is initializing
+    checkLocation();
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
   const handleRequestCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
