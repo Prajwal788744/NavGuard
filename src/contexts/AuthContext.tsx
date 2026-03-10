@@ -201,6 +201,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .select('*, users(name, email)')
       .order('created_at', { ascending: false });
 
+    console.log('getSOSAlerts result:', { data, error });
     if (error) {
       console.error('Error fetching SOS alerts:', error);
       return [];
@@ -214,7 +215,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getAllUsers = async () => {
-    const { data } = await supabase.from('users').select('*');
+    const { data, error } = await supabase.from('users').select('*');
+    console.log('getAllUsers result:', { data, error });
     return data || [];
   };
 
