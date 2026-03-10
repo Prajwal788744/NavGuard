@@ -53,6 +53,7 @@ interface AuthContextType {
   getSOSAlerts: () => Promise<SOSAlert[]>;
   resolveSOSAlert: (alertId: string) => Promise<void>;
   getAllUsers: () => Promise<any[]>;
+  resetPassword: (email: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -217,9 +218,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return data || [];
   };
 
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    if (error) {
+      console.error('Reset password error:', error);
+      return false;
+    }
+    return true;
+  };
+
   return (
     <AuthContext.Provider value={{
-      user, loading, login, register, logout, updateProfile, uploadId, triggerSOS, getSOSAlerts, resolveSOSAlert, getAllUsers
+      user, loading, login, register, logout, updateProfile, uploadId, triggerSOS, getSOSAlerts, resolveSOSAlert, getAllUsers, resetPassword
     }}>
       {children}
     </AuthContext.Provider>
