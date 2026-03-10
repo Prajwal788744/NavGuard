@@ -20,7 +20,7 @@ import { toast } from 'sonner';
 
 const Dashboard = () => {
   const { t } = useTranslation();
-  const { user, uploadId } = useAuth();
+  const { user, loading, uploadId } = useAuth();
   const navigate = useNavigate();
   const [locationOn, setLocationOn] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
@@ -31,12 +31,13 @@ const Dashboard = () => {
   const [micPermission, setMicPermission] = useState<boolean | null>(null);
 
   useEffect(() => {
+    if (loading) return; // Wait for auth to finish loading
     if (!user) { navigate('/login'); return; }
     if (user.isAdmin) { navigate('/authority'); return; }
     if (!user.idUploaded) setShowFirstUpload(true);
     checkLocation();
     checkDevices();
-  }, [user]);
+  }, [user, loading]);
 
   const checkLocation = () => {
     navigator.geolocation?.getCurrentPosition(() => setLocationOn(true), () => setLocationOn(false));

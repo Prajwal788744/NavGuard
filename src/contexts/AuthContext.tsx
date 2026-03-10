@@ -35,6 +35,7 @@ export interface SOSAlert {
 
 interface AuthContextType {
   user: User | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   register: (email: string, password: string, name: string) => Promise<boolean | 'verify-email'>;
   logout: () => void;
@@ -58,6 +59,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchUserProfile = async (userId: string) => {
     const { data } = await supabase.from('users').select('*').eq('id', userId).single();
@@ -69,12 +71,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } else {
       setUser(null);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         fetchUserProfile(session.user.id);
+      } else {
+        setLoading(false);
       }
     });
 
@@ -83,6 +88,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         fetchUserProfile(session.user.id);
       } else {
         setUser(null);
+        setLoading(false);
       }
     });
 
@@ -205,7 +211,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{
-      user, login, register, logout, updateProfile, uploadId, triggerSOS, getSOSAlerts, resolveSOSAlert, getAllUsers
+      user, loading, login, register, logout, updateProfile, uploadId, triggerSOS, getSOSAlerts, resolveSOSAlert, getAllUsers
     }}>
       {children}
     </AuthContext.Provider>

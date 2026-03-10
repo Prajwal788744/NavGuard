@@ -22,7 +22,7 @@ interface RegisteredUser {
 
 const AuthorityDashboard = () => {
   const { t } = useTranslation();
-  const { user, getSOSAlerts, resolveSOSAlert, getAllUsers } = useAuth();
+  const { user, loading, getSOSAlerts, resolveSOSAlert, getAllUsers } = useAuth();
   const navigate = useNavigate();
   const [users, setUsers] = useState<RegisteredUser[]>([]);
   const [alerts, setAlerts] = useState<SOSAlert[]>([]);
@@ -30,6 +30,7 @@ const AuthorityDashboard = () => {
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
+    if (loading) return; // Wait for auth to finish loading
     if (!user || !user.isAdmin) { navigate('/login'); return; }
 
     const fetchData = async () => {
@@ -40,7 +41,7 @@ const AuthorityDashboard = () => {
     };
 
     fetchData();
-  }, [user, refreshKey]);
+  }, [user, loading, refreshKey]);
 
   // Auto-refresh every 5s for SOS alerts
   useEffect(() => {
@@ -114,8 +115,8 @@ const AuthorityDashboard = () => {
                       </div>
                     </div>
                     <span className={`text-xs px-2 py-1 rounded-full font-medium ${!alert.resolved
-                        ? 'bg-destructive/10 text-destructive'
-                        : 'bg-primary/10 text-primary'
+                      ? 'bg-destructive/10 text-destructive'
+                      : 'bg-primary/10 text-primary'
                       }`}>
                       {!alert.resolved ? t('active') : t('resolved')}
                     </span>
