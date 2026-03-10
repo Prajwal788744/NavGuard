@@ -36,7 +36,7 @@ export interface SOSAlert {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, name: string) => Promise<boolean>;
+  register: (email: string, password: string, name: string) => Promise<boolean | 'verify-email'>;
   logout: () => void;
   updateProfile: (data: Partial<User>) => void;
   uploadId: () => void;
@@ -98,21 +98,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return true;
   };
 
-  const register = async (email: string, password: string, name: string) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+  const register = async (email: string, password: string, name: string): Promise<boolean | 'verify-email'> => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name } }
+    });
     if (error) {
       console.error(error);
       return false;
     }
-    if (data.user) {
-      // Create user profile in 'users' table
-      const { error: dbError } = await supabase.from('users').insert({
-        id: data.user.id,
-        email,
-        name,
-        role: 'user'
-      });
-      if (dbError) console.error('Error inserting user profile:', dbError);
+    // If email confirmation is required, session will be null
+    if (data.user && !data.session) {
+      return 'verify-email';
     }
     return true;
   };

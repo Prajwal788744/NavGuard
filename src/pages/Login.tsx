@@ -22,16 +22,26 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isRegister) {
-      const ok = await register(email, password, name);
-      if (ok) { toast.success('Account created!'); navigate('/dashboard'); }
-      else toast.error('Email already exists');
+      const result = await register(email, password, name);
+      if (result === 'verify-email') {
+        toast.success('A verification link has been sent to your email. Please check your inbox and verify your account before signing in.');
+        setIsRegister(false);
+      } else if (result === true) {
+        toast.success('Account created!');
+        navigate('/dashboard');
+      } else {
+        toast.error('Registration failed. Email may already exist.');
+      }
     } else {
       const ok = await login(email, password);
       if (ok) {
-        const u = JSON.parse(localStorage.getItem('navguard_user') || '{}');
-        navigate(u.isAdmin ? '/authority' : '/dashboard');
+        toast.success('Signed in successfully!');
+        // Navigation will be handled by auth state change — wait briefly then redirect
+        // The useAuth hook will set the user; we rely on Dashboard/AuthorityDashboard to handle role-based access
+        navigate('/dashboard');
+      } else {
+        toast.error('Invalid credentials');
       }
-      else toast.error('Invalid credentials');
     }
   };
 
