@@ -196,12 +196,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getSOSAlerts = async (): Promise<SOSAlert[]> => {
+    // For authority users, use RPC to bypass RLS
+    if (user?.isAdmin) {
+      const { data, error } = await supabase.rpc('get_all_alerts_for_admin');
+      console.log('getSOSAlerts (admin RPC) result:', { data, error });
+      if (error) {
+        console.error('Error fetching SOS alerts via RPC:', error);
+        return [];
+      }
+      // Map RPC result to SOSAlert shape
+      return (data || []).map((a: any) => ({
+        ...a,
+        users: { name: a.user_name, email: a.user_email }
+      })) as SOSAlert[];
+    }
+
+    // Regular users: normal query (RLS filters to their own)
     const { data, error } = await supabase
       .from('sos_alerts')
       .select('*, users(name, email)')
       .order('created_at', { ascending: false });
 
-    console.log('getSOSAlerts result:', { data, error });
     if (error) {
       console.error('Error fetching SOS alerts:', error);
       return [];
@@ -215,8 +230,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getAllUsers = async () => {
-    const { data, error } = await supabase.from('users').select('*');
-    console.log('getAllUsers result:', { data, error });
+    // For authority users, use RPC to bypass RLS and get all regular users
+    if (user?.isAdmin) {
+      const { data, error } = await supabase.rpc('get_all_users_for_admin');
+      console.log('getAllUsers (admin RPC) result:', { data, error });
+      return data || [];
+    }
+
+    // Regular users: normal query
+    const { data } = await supabase.from('users').select('*');
     return data || [];
   };
 
