@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Download, LogIn, ShieldCheck, QrCode, AlertTriangle, MapPin, UserPlus, Upload, Link2, Shield, Monitor, Fingerprint, FileSearch, Activity } from 'lucide-react';
 import Shield3D from '@/components/Shield3D';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Landing = () => {

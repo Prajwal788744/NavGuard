@@ -4,17 +4,17 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPinOff, MapPin, Shield, Clock, Video, Mic } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import Navbar from '@/components/Navbar';
-import SOSButton from '@/components/SOSButton';
-import IdentityCard from '@/components/IdentityCard';
-import WeatherPlaceholder from '@/components/WeatherPlaceholder';
-import GeofencePlaceholder from '@/components/GeofencePlaceholder';
-import SafePlacesFinder from '@/components/SafePlacesFinder';
-import TravelTimeline from '@/components/TravelTimeline';
-import EmergencyContacts from '@/components/EmergencyContacts';
-import UploadPopup from '@/components/UploadPopup';
-import Footer from '@/components/Footer';
-import BottomNav from '@/components/BottomNav';
+import Navbar from '@/components/layout/Navbar';
+import SOSButton from '@/components/sos/SOSButton';
+import IdentityCard from '@/components/identity/IdentityCard';
+import WeatherPlaceholder from '@/components/safety/WeatherPlaceholder';
+import GeofencePlaceholder from '@/components/safety/GeofencePlaceholder';
+import SafePlacesFinder from '@/components/safety/SafePlacesFinder';
+import TravelTimeline from '@/components/timeline/TravelTimeline';
+import EmergencyContacts from '@/components/profile/EmergencyContacts';
+import UploadPopup from '@/components/identity/UploadPopup';
+import Footer from '@/components/layout/Footer';
+import BottomNav from '@/components/layout/BottomNav';
 
 import { toast } from 'sonner';
 

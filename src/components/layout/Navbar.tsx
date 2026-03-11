@@ -5,8 +5,8 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { Moon, Sun, User, LogOut, Menu, X, Globe, ChevronDown, ArrowLeft, MoreVertical, Home, MapPin, Clock, Cloud } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import logoDark from '@/assets/navguard-compact-dark.svg';
-import logoLight from '@/assets/navguard-compact-light.svg';
+import logoDark from '@/assets/logos/navguard-compact-dark.svg';
+import logoLight from '@/assets/logos/navguard-compact-light.svg';
 
 const languages = [
   { code: 'en', label: 'English' },

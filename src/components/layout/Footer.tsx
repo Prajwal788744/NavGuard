@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/contexts/ThemeContext';
-import logoDark from '@/assets/navguard-compact-dark.svg';
-import logoLight from '@/assets/navguard-compact-light.svg';
+import logoDark from '@/assets/logos/navguard-compact-dark.svg';
+import logoLight from '@/assets/logos/navguard-compact-light.svg';
 
 const Footer = () => {
   const { t } = useTranslation();

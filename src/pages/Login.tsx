@@ -6,8 +6,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { toast } from 'sonner';
 import { ArrowLeft, Mail, Lock, User, KeyRound } from 'lucide-react';
-import logoDark from '@/assets/navguard-compact-dark.svg';
-import logoLight from '@/assets/navguard-compact-light.svg';
+import logoDark from '@/assets/logos/navguard-compact-dark.svg';
+import logoLight from '@/assets/logos/navguard-compact-light.svg';
 
 const Login = () => {
   const { t } = useTranslation();
